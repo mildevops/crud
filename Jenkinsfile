@@ -1,18 +1,20 @@
-pipeline {
-  agent { docker 'cloudbees/java-build-tools' }
-  stages {
-    stage('build') {
-      steps {
-        sh 'mvn clean install' 
-      }
+node('node') {
+
+
+       stage('Checkout'){
+
+          checkout scm
+       
+       stage('Test'){
+
+         env.NODE_ENV = "test"
+
+         print "Environment will be : ${env.NODE_ENV}"
+
+         sh 'node -v'
+         sh 'npm install'
+         sh 'npm test'
+
+       }
     }
-  }
-  post {
-    success {
-      archive 'target/blueocean-pipeline-editor.hpi'
-    }
-    always {
-      junit 'target/**/*.xml'
-    }
-  }
 }
